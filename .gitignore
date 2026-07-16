@@ -1,0 +1,9 @@
+# Ignore local VS Code history backups
+.history/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore dynamically generated local logs (optional)
+live_network_logs.csv
