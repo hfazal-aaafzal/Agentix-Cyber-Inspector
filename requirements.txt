@@ -1,5 +1,7 @@
-streamlit
-pandas
-plotly
-scikit-learn
-openpyxl
+streamlit>=1.38.0
+pandas>=2.1.0
+numpy>=1.26.0
+plotly>=5.20.0
+scikit-learn>=1.4.0
+requests>=2.31.0
+XlsxWriter>=3.2.0
