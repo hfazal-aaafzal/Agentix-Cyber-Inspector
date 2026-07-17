@@ -39,6 +39,17 @@ import requests
 import streamlit as st
 from sklearn.ensemble import IsolationForest
 
+# --- Google Search Console & SEO Meta Tags ---
+st.html(
+    '<head>'
+    '<meta name="google-site-verification" content="googlede44eda78c75bfb9" />'
+    '<meta name="description" content="AXPS Cyber Inspector: An interactive, reactive security dashboard powered by Python and Machine Learning to dynamically isolate network traffic anomalies." />'
+    '<meta name="keywords" content="AXPS, Cyber Inspector, Machine Learning, Python, Streamlit, Anomaly Detection" />'
+    '<meta name="author" content="AXPS" />'
+    '<meta name="robots" content="index, follow" />'
+    '</head>'
+)
+
 # ---------------------------------------------------------------------------
 # 1. PAGE & THEME CONFIGURATION
 # ---------------------------------------------------------------------------
