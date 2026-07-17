@@ -641,12 +641,26 @@ def render_feedback_button() -> None:
 # 9b. FEEDBACK — quick 5-star widget for people who won't fill the full form
 # ---------------------------------------------------------------------------
 
-def log_feedback_locally(rating: int) -> None:
-    """Appends to a local CSV. On Streamlit Community Cloud this resets on
-    redeploy — swap in a Google Sheet / database write for persistence."""
-    row = pd.DataFrame([{"timestamp": datetime.datetime.now().isoformat(), "rating": rating}])
-    header = not os.path.exists(FEEDBACK_LOG_PATH)
-    row.to_csv(FEEDBACK_LOG_PATH, mode="a", header=header, index=False)
+# ---------------------------------------------------------------------------
+# 9b. FEEDBACK — Quick 5-star widget linked directly to Google Forms
+# ---------------------------------------------------------------------------
+
+def log_feedback_to_google_form(rating: int) -> None:
+    """Sends the star rating directly to the AXPS Cyber Inspector Google Form background endpoint."""
+    # Background submission endpoint
+    form_url = "https://docs.google.com/forms/d/e/1FAIpQLSdnijBO1N3YNY0hEq1q89tvQMPARt0MKhvhZ0c8r4r2f4FYhQ/formResponse"
+    
+    # Payload mapping your rating parameter dynamically
+    payload = {
+        "entry.1037300732": rating  # Maps to your Quick Rating question field
+    }
+    
+    try:
+        # Silently post the rating data to your live Google Form responses spreadsheet
+        requests.post(form_url, data=payload, timeout=5)
+    except Exception:
+        # Fail silently so the user dashboard experience remains entirely uninterrupted
+        pass
 
 
 def render_star_rating() -> None:
@@ -655,16 +669,17 @@ def render_star_rating() -> None:
         st.markdown("<h3 style='color:#00ffcc;margin-top:0;'>⭐ Quick Rating</h3>", unsafe_allow_html=True)
         st.caption("No time for the full survey? Give your honest feedback in one tap.")
 
-        if st.session_state["feedback_submitted"]:
+        if st.session_state.get("feedback_submitted"):
             st.success(f"Thanks for the {st.session_state['star_rating']}-star rating! 🙏")
         else:
-            rating = st.feedback("stars")  # native Streamlit 5-star widget
+            rating = st.feedback("stars")  # Native Streamlit 5-star interactive component
             if rating is not None:
-                st.session_state["star_rating"] = rating + 1  # 0-indexed → 1-5
+                st.session_state["star_rating"] = rating + 1  # converts 0-indexed scale to 1-5 stars
                 st.session_state["feedback_submitted"] = True
-                log_feedback_locally(rating + 1)
+                
+                # Stream live directly to the cloud response database
+                log_feedback_to_google_form(rating + 1)
                 st.rerun()
-
 
 # ---------------------------------------------------------------------------
 # 7. HEADER
