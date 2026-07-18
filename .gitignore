@@ -5,3 +5,6 @@ __pycache__/
 *.pyc
 .venv/
 .history/
+app_backup_915.py
+live_network_logs.csv
+feedback_log.csv
